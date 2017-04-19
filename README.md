@@ -416,44 +416,109 @@ to get the intercept to work.
 
 ## Milestone 4: Steal Your Face(book)
 
-Challenge: Make the fake login POST work on your host machine such that SET is able to capture at least the POST data
+**Challenge**: Make the fake login POST work on your host machine such that SET
+is able to capture at least the POST data
 
-SET is listening on port 80 inside the kalise container, but we don't have a way to access the Kali container by its IP due to the limitations of Docker. But you have all you need to make this work such that the POST gets redirected via localhost:666 back to the kalise container. Hints:
+SET is listening on port 80 inside the kalise container, but we don't have a
+way to access the Kali container by its IP due to the limitations of Docker.
+But you have all you need to make this work such that the POST gets redirected
+via localhost:666 back to the kalise container. Hints:
 
-Use burp as a proxy, setup in the same way you did for earlier labs
-Manual approach: capture the POST request, send it to the Repeater and replay it against localhost:666
-Bonus points: Use Proxy > Options to configure burp to automatically handle the redirect
-Monitor the SET console for information about what's being captured
-Hit CTRL-C when you think you've got it. Exit SET and look for the captured XML data in ~/.set/reports
-What is the AJAX on the login page doing?
-Did SET capture the credentials? Why or why not?
-Facebook's isn't your average login page, so this will take some time to understand. If you aren't able to capture the credentials, it's more important to understand why than to actually make this work with SET. One thing to remember is that because SET is cloning the page, you'd have options to make this easier on yourself, since it's more important that the page look like the real thing than work like the real thing.
+* Use burp as a proxy, setup in the same way you did for earlier labs
+* Manual approach: capture the POST request, send it to the Repeater and replay it against localhost:666
+* Bonus points: Use Proxy > Options to configure burp to automatically handle the redirect
+* Monitor the SET console for information about what's being captured
+* Hit CTRL-C when you think you've got it. Exit SET and look for the captured XML data in ~/.set/reports
+* What is the AJAX on the login page doing?
+* Did SET capture the credentials? Why or why not?
 
-We're also making it a bit harder on ourselves than it has to be with the Docker setup, but time with burp is time well spent. It's fun to play with all the Kali tools, but people who do this kind of work with regularity will tell you that burp is one the top five tools they use all the time.
+Facebook's isn't your average login page, so this will take some time to
+understand. If you aren't able to capture the credentials, it's more important
+to understand why than to actually make this work with SET. One thing to
+remember is that because SET is cloning the page, you'd have options to make
+this easier on yourself, since it's more important that the page look like the
+real thing than work like the real thing.
 
-Milestone 5: SE In Situ
-The most creative uses of social engineering often target specific groups or individuals, taking advantage of more than just lax security on the part of the end user, but also weak infosec or procedures on the part of large organizations and companies. As such, it can be difficult to simulate SE techniques in the same way we've simulated WordPress hacks. Instead of a static target with predictable vulnerabilities, SE targets are people with mostly predictable behavior: an end user who's reusing passwords across sites, a help desk technician following a specific playbook.
+We're also making it a bit harder on ourselves than it has to be with the
+Docker setup, but time with burp is time well spent. It's fun to play with all
+the Kali tools, but people who do this kind of work with regularity will tell
+you that burp is one the top five tools they use all the time.
 
-Even though we can't simulate situations like this, it's helpful to look at some examples. Read/watch the following:
+## Milestone 5: SE In Situ
+The most creative uses of social engineering often target specific groups or
+individuals, taking advantage of more than just lax security on the part of the
+end user, but also weak infosec or procedures on the part of large
+organizations and companies. As such, it can be difficult to simulate SE
+techniques in the same way we've simulated WordPress hacks. Instead of a static
+target with predictable vulnerabilities, SE targets are people with mostly
+predictable behavior: an end user who's reusing passwords across sites, a help
+desk technician following a specific playbook.
 
-How Apple and Amazon Security Flaws Led to My Epic Hacking
- What Happens When You Dare Expert Hackers To Hack You
-In the cases, we see a user compromised through techniques that exploit security measures partially beyond his or her control. Challenge questions:
+Even though we can't simulate situations like this, it's helpful to look at
+some examples. Read/watch the following:
 
-What vulnerabilities were beyond the control of the user?
-What if anything could have been done by the user to mitigate the severity of the attack?
-Now, think back to the fake Facebook login scenario above. Assuming a successful compromise, in which the user's Facebook username and password were successfully intercepted, answer the following:
+* [How Apple and Amazon Security Flaws Led to My Epic
+  Hacking](https://www.wired.com/2012/08/apple-amazon-mat-honan-hacking/)
+* [What Happens When You Dare Expert Hackers To Hack
+  You](https://courses.codepath.com/course_videos/web_security_university/youtube/F78UdORll-Q?title=What+Happens+When+You+Dare+Expert+Hackers+To+Hack+You)
 
-What could the user do to mitigate this, making a successful login impossible for the attacker even with the credentials? (Hint: FB offers this as an option; not all sites do)
-Why might the username/password still be of value to the attacker even if she can't use them to login to Facebook? (Hint: think about how users come up with passwords)
-Bonus Milestone 6: Harvest Thy Neighbor's Credentials
-In this optional bonus milestone, for those who want to go the extra mile, complete the basic spear-phishing attack chain started in milestones 1 - 4 and then enlist a lab partner who's willing to play the phish. The goal is to send your partner an email with a link to an authentic-looking login page that captures entered credentials. The partner willingly clicks the link and enters a username and secret password, which you should be able to intercept. At the end, compare notes with your partner for feedback. Obviously, you're not trying to fool your partner, but you are trying to impress. See how slick you can make it.
+In the cases, we see a user compromised through techniques that exploit
+security measures partially beyond his or her control. Challenge questions:
+* What vulnerabilities were beyond the control of the user?
+* What if anything could have been done by the user to mitigate the severity of the attack?
 
-There are a number of ways to approach this, but here are the core issues you're going to have to solve:
+Now, think back to the fake Facebook login scenario above. Assuming a
+successful compromise, in which the user's Facebook username and password were
+successfully intercepted, answer the following:
 
-Your phishing page needs to be accessible beyond your localhost. Getting this to work using SET in the docker container will probably be too much work (though there are ways to expose a docker container externally). A simpler alternative might be installing SET on your host system directly. Alternatively, you could try running Kali in a VM or live USB...or even in the cloud (Amazon and Google have free trials) using Ubuntu and SET installed via apt.
-If you do decide to run on your host system, you may need to alter your firewall to allow incoming connections on port 80. Be careful that you don't expose more than you need, and that you undo any changes after the experiment is concluded.
-A phishing email with a link is sufficient; don't try to deliver a payload or open a reverse shell. One area you could look into is sending an official "Facebook-ish" looking email. Bonus points for spoofing sender info convincingly, but this can also get your mail bounced...so test with yourself first.
-Try to get the page looking as realistic as possible, but you can avoid using https, as it will take more work to configure and adds little value. Browsers typically complain about self-signed certs, so it's actually counter-productive.
-If you're feeling particularly ambitious, you could just use SET or a similar tool to create the login page, then write a simple PHP back end to capture the post data. Bonus points for this.
-Try to think about this from the user experience: the goal is to fool a user who doesn't look at the address bar of the browser. The ancillary problems you'll need to solve, such as hosting the page, aren't specifically related to security, but they're really good skills to have. Being able to stand up a demo box in the cloud, for instance, comes in very handy.
+* What could the user do to mitigate this, making a successful login impossible
+  for the attacker even with the credentials? (Hint: FB offers this as an
+  option; not all sites do)
+* Why might the username/password still be of value to the attacker even if she
+  can't use them to login to Facebook? (Hint: think about how users come up
+  with passwords)
+
+## Bonus Milestone 6: Harvest Thy Neighbor's Credentials
+
+In this optional bonus milestone, for those who want to go the extra mile,
+complete the basic spear-phishing attack chain started in milestones 1 - 4 and
+then enlist a lab partner who's willing to play the phish. The goal is to send
+your partner an email with a link to an authentic-looking login page that
+captures entered credentials. The partner willingly clicks the link and enters
+a username and secret password, which you should be able to intercept. At the
+end, compare notes with your partner for feedback. Obviously, you're not trying
+to fool your partner, but you are trying to impress. See how slick you can make
+it.
+
+There are a number of ways to approach this, but here are the core issues
+you're going to have to solve:
+
+* Your phishing page needs to be accessible beyond your localhost. Getting this
+  to work using SET in the docker container will probably be too much work
+  (though there are ways to expose a docker container externally). A simpler
+  alternative might be installing SET on your host system directly.
+  Alternatively, you could try running Kali in a VM or live USB...or even in
+  the cloud (Amazon and Google have free trials) using Ubuntu and SET installed
+  via apt.
+* If you do decide to run on your host system, you may need to alter your
+  firewall to allow incoming connections on port 80. Be careful that you don't
+  expose more than you need, and that you undo any changes after the experiment
+  is concluded.
+* A phishing email with a link is sufficient; don't try to deliver a payload or
+  open a reverse shell. One area you could look into is sending an official
+  "Facebook-ish" looking email. Bonus points for spoofing sender info
+  convincingly, but this can also get your mail bounced...so test with yourself
+  first.
+* Try to get the page looking as realistic as possible, but you can avoid using
+  https, as it will take more work to configure and adds little value. Browsers
+  typically complain about self-signed certs, so it's actually
+  counter-productive.
+* If you're feeling particularly ambitious, you could just use SET or a similar
+  tool to create the login page, then write a simple PHP back end to capture
+  the post data. Bonus points for this.
+
+Try to think about this from the user experience: the goal is to fool a user
+who doesn't look at the address bar of the browser. The ancillary problems
+you'll need to solve, such as hosting the page, aren't specifically related to
+security, but they're really good skills to have. Being able to stand up a demo
+box in the cloud, for instance, comes in very handy.
