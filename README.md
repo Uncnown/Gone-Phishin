@@ -338,22 +338,53 @@ the other end of such a link.
 > like MailChimp or SendGrid to avoid getting caught in filters.
 
 ## Milestone 3: Fakebook
-Picture this: you're sitting with your favorite laptop in your favorite cafe, using their public Wi-Fi and browsing Facebook. The Wi-Fi connection drops suddenly, and you have no internet connection. You open your wireless network settings and don't see the cafe's network listed, so you're just about to get up and ask the overworked barista about it when you see the network SSID pop up again. You reconnect and head back to Facebook, but you've been logged out, so you log back in and continue browsing. None of this is particularly unusual. It's a busy morning in the cafe, and lots of people are using the cafe's single wireless AP, so a spotty connection makes sense given the load. It's also not too surprising that you were logged out of Facebook as the result of a connection drop, and anyway, your login worked and nothing seems amiss now.
+Picture this: you're sitting with your favorite laptop in your favorite cafe,
+using their public Wi-Fi and browsing Facebook. The Wi-Fi connection drops
+suddenly, and you have no internet connection. You open your wireless network
+settings and don't see the cafe's network listed, so you're just about to get
+up and ask the overworked barista about it when you see the network SSID pop up
+again. You reconnect and head back to Facebook, but you've been logged out, so
+you log back in and continue browsing. None of this is particularly unusual.
+It's a busy morning in the cafe, and lots of people are using the cafe's single
+wireless AP, so a spotty connection makes sense given the load. It's also not
+too surprising that you were logged out of Facebook as the result of a
+connection drop, and anyway, your login worked and nothing seems amiss now.
 
-You probably didn't notice the quiet person sitting in the corner with a laptop who just ran an evil twin attack on the entire cafe. You'd have no way of knowing her backpack contained a USB wireless interface capable of packet injection, enabling her to kick everyone off the cafe's Wi-Fi and then spoof it using the same SSID so that everyone would reconnect to her rogue AP instead. And you probably didn't have more than a few seconds to notice that the URL of the Facebook login page to which you were redirected wasn't facebook.com but was an IP address (pointing to her laptop) or that it was missing the little green lock symbol your browser displays for secured URLs.
+You probably didn't notice the quiet person sitting in the corner with a laptop
+who just ran an [evil twin
+attack](https://en.wikipedia.org/wiki/Evil_twin_(wireless_networks)) on the
+entire cafe. You'd have no way of knowing her backpack contained a USB wireless
+interface capable of packet injection, enabling her to kick everyone off the
+cafe's Wi-Fi and then spoof it using the same SSID so that everyone would
+reconnect to her rogue AP instead. And you probably didn't have more than a few
+seconds to notice that the URL of the Facebook login page to which you were
+redirected wasn't facebook.com but was an IP address (pointing to her laptop)
+or that it was missing the little green lock symbol your browser displays for
+secured URLs.
 
-The reason you probably didn't notice that last part was because the login page itself looked exactly like the real Facebook login page, down to the fonts and images and even the favicon, and after typing in your username and password, you were seamlessly redirected back to the real wireless AP and the real Facebook (to which you were already authenticated anyway).
+The reason you probably didn't notice that last part was because the login page
+itself looked exactly like the real Facebook login page, down to the fonts and
+images and even the favicon, and after typing in your username and password,
+you were seamlessly redirected back to the real wireless AP and the real
+Facebook (to which you were already authenticated anyway).
 
-This isn't even a very sophisticated attack chain with the right equipment, but still more than we can reliably emulate without it. However, we can use SET to make one of these fake login pages pretty easily. From the root SET menu:
+This isn't even a very sophisticated attack chain with the right equipment, but
+still more than we can reliably emulate without it. However, we can use SET to
+make one of these fake login pages pretty easily. From the root SET menu:
 
-Choose 1) Social-Engineering Attacks
-Choose 2) Website Attack Vectors
-Choose 3) Credential Harvester Attack Method
-Choose 2) Site Cloner
-SET will ask you for the IP address for the POST; this is the IP that the fake login page will post to, so use the IP of the kalise container you determined in milestone 0.
+Choose `1) Social-Engineering Attacks`
+Choose `2) Website Attack Vectors`
+Choose `3) Credential Harvester Attack Method`
+Choose `2) Site Cloner`
 
-Next, SET will ask you for the site to clone, so enter http://www.facebook.com and then SET will run a server with the cloned site:
+SET will ask you for the `IP address for the POST;` this is the IP that the
+fake login page will post to, so use the IP of the `kalise` container you
+determined in milestone 0.
 
+Next, SET will ask you for the site to clone, so enter
+`http://www.facebook.com` and then SET will run a server with the cloned site:
+
+```
 set:webattack> Enter the url to clone:http://facebook.com
 
 [*] Cloning the website: https://login.facebook.com/login.php
@@ -364,18 +395,27 @@ fields are available. Regardless, this captures all POSTs on a website.
 [*] The Social-Engineer Toolkit Credential Harvester Attack
 [*] Credential Harvester is running on port 80
 [*] Information will be displayed to you as it arrives below:
+```
 You should be able to view this from your host at http://localhost:666:
 
-fakebook
+![Image](http://i.imgur.com/9And1I7.png)
 
 A few things to note:
 
-It's not perfect, but it's close enough to fool most users
-It's fast enough that a hacker could potentially generate it on-the-fly (useful for harvesting credentials from more obscure sites)
-SET is listening for the POST this page would create, ready to intercept all the credentials and write them to the filesystem, but...
-Because we're running this inside a docker container, the POST will try to go to the IP of the Kali container instead of the localhost-mapped port (localhost:666) and thus will fail. Normally, running Kali as the host OS, this wouldn't be an issue, but in this case you'll have to do some more setup to get the intercept to work.
+* It's not perfect, but it's close enough to fool most users
+* It's fast enough that a hacker could potentially generate it on-the-fly
+  (useful for harvesting credentials from more obscure sites)
+* SET is listening for the POST this page would create, ready to intercept all
+  the credentials and write them to the filesystem, but...
 
-Milestone 4: Steal Your Face(book)
+Because we're running this inside a docker container, the POST will try to go
+to the IP of the Kali container instead of the localhost-mapped port
+`(localhost:666)` and thus will fail. Normally, running Kali as the host OS,
+this wouldn't be an issue, but in this case you'll have to do some more setup
+to get the intercept to work.
+
+## Milestone 4: Steal Your Face(book)
+
 Challenge: Make the fake login POST work on your host machine such that SET is able to capture at least the POST data
 
 SET is listening on port 80 inside the kalise container, but we don't have a way to access the Kali container by its IP due to the limitations of Docker. But you have all you need to make this work such that the POST gets redirected via localhost:666 back to the kalise container. Hints:
