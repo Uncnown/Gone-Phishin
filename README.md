@@ -158,12 +158,15 @@ payload wouldn't be harmless.
 
 ## Milestone 2: Try a Real Payload
 
-Let's try one of the real payloads with SET. After completing the above, you should see the SET menu redisplayed.
+Let's try one of the real payloads with SET. After completing the above, you
+should see the SET menu redisplayed.
 
-Choose Spear-Phishing Attack Vectors
-Choose Create a FileFormat Payload
+Choose `Spear-Phishing Attack Vectors`
+Choose `Create a FileFormat Payload`
+
 You'll see a long list of payload options:
 
+```
  Select the file format exploit you want.
  The default is the PDF embedded EXE.
 
@@ -193,19 +196,37 @@ You'll see a long list of payload options:
   22) MSCOMCTL ActiveX Buffer Overflow (ms12-027)
 
 set:payloads>
-Take a moment to read the available options. There's a clear pattern here of malicious payloads embedded in the kinds of files you'd typically see as email attachments: PDFs, ZIP, even RTF.
 
-Which two software companies are heavily represented on this list?
-Which operating system would most of these exploits require?
-That last one is especially noteworthy, because if the target isn't using that OS, most of these will not work. Something to consider...but for the purposes of this lab, it doesn't matter if you don't have the right OS for this.
+```
 
-Let's proceed with option 6) Microsoft Word RTF pFragments Stack Buffer Overflow (MS10-087)
+Take a moment to read the available options. There's a clear pattern here of
+malicious payloads embedded in the kinds of files you'd typically see as email
+attachments: PDFs, ZIP, even RTF.
 
-This payload takes advantage of an issue in the Microsoft Word RTF parser, which affects all versions of Microsoft Office prior to the release of the MS10-087 security patch. So this payload would not only be limited to users of a specific OS but who are also using an outdated version of MS Office.
+* Which two software companies are heavily represented on this list?
+* Which operating system would most of these exploits require?
 
-As with so many of these payloads, the specific issue being exploited is a buffer overflow. It's not necessary to understand the details, but this is an extremely common type of vulnerability for apps written in C and C++. If you're game, you can read more about how it works in this particular case here.
-After choosing this option for the payload, you'll be presented with a further list of options for how the payload, once delivered, will work:
+That last one is especially noteworthy, because if the target isn't using that
+OS, most of these will not work. Something to consider...but for the purposes
+of this lab, it doesn't matter if you don't have the right OS for this.
 
+Let's proceed with option `6) Microsoft Word RTF pFragments Stack Buffer Overflow (MS10-087)`
+
+> This payload takes advantage of an issue in the Microsoft Word RTF parser,
+> which affects all versions of Microsoft Office prior to the release of the
+> MS10-087 security patch. So this payload would not only be limited to users of
+> a specific OS but who are also using an outdated version of MS Office.
+
+As with so many of these payloads, the specific issue being exploited is a
+[buffer overflow.](https://en.wikipedia.org/wiki/Buffer_overflow) It's not
+necessary to understand the details, but this is an extremely common type of
+vulnerability for apps written in C and C++. If you're game, you can read more
+about [how it works in this particular case
+here.](http://0x1byte.blogspot.com/2011/02/cve-2010-3333-microsoft-office-rtf-file.html)
+
+After choosing this option for the payload, you'll be presented with a further
+list of options for how the payload, once delivered, will work:
+```
    1) Windows Reverse TCP Shell              Spawn a command shell on victim and send back to attacker
    2) Windows Meterpreter Reverse_TCP        Spawn a meterpreter shell on victim and send back to attacker
    3) Windows Reverse VNC DLL                Spawn a VNC server on victim and send back to attacker
@@ -213,18 +234,36 @@ After choosing this option for the payload, you'll be presented with a further l
    5) Windows Meterpreter Reverse_TCP (X64)  Connect back to the attacker (Windows x64), Meterpreter
    6) Windows Shell Bind_TCP (X64)           Execute payload and create an accepting port on remote system
    7) Windows Meterpreter Reverse HTTPS      Tunnel communication over HTTP using SSL and use Meterpreter
-Most of these are reverse shells, which you should be familiar with from working with Meterpreter. In fact, you can see there are a couple of Meterpreter options.
+```
 
-Let's be optimistic and pick Windows Meterpreter Reverse_TCP (X64), which would give us extensive control over the target system if successful.
+Most of these are [reverse
+shells](http://resources.infosecinstitute.com/icmp-reverse-shell/), which you
+should be familiar with from working with Meterpreter. In fact, you can see
+there are a couple of Meterpreter options.
 
-After picking this option, SET will ask you to enter the IP address for the payload listener (LHOST), which should be the IP of the server Meterpreter will try to connect to if the payload is delivered and activated successfully. You can just use 127.0.0.1 for now and use the default (443) for the next prompt about the the port since we're not going to try to activate the payload.
+Let's be optimistic and pick `Windows Meterpreter Reverse_TCP (X64)`, which
+would give us extensive control over the target system if successful.
 
-The next prompt will ask you to either keep the default filename (moo.pdf) or to rename the file. The name of the file as it appears in the email is important, so you'd want to pick something that will tempt the user to open it. And you'd want to use the .rtf extension so it opens in MS Word.
+After picking this option, SET will ask you to enter the `IP address for the
+payload listener (LHOST)`, which should be the IP of the server Meterpreter
+will try to connect to if the payload is delivered and activated successfully.
+You can just use `127.0.0.1` for now and use the default (`443`) for the next
+prompt about the the port since we're not going to try to activate the payload.
 
-For the next option, choose 1. E-Mail Attack Single Email Address to send to just a single address.
+The next prompt will ask you to either keep the default filename (`moo.pdf`) or
+to rename the file. The name of the file as it appears in the email is
+important, so you'd want to pick something that will tempt the user to open it.
+And you'd want to use the `.rtf` extension so it opens in MS Word.
 
-The following option will ask you if you want to use a pre-defined template email or a custom one. A spear-fishing attack would likely use a custom email, in which you specify the subject and body as before. But the pre-defined options are amusing:
+For the next option, choose `1. E-Mail Attack Single Email Address` to send to
+just a single address.
 
+The following option will ask you if you want to use a pre-defined template
+email or a custom one. A spear-fishing attack would likely use a custom email,
+in which you specify the subject and body as before. But the pre-defined
+options are amusing:
+
+```
    Do you want to use a predefined template or craft
    a one time email template.
 
@@ -244,27 +283,61 @@ set:phishing>1
 9: Baby Pics
 10: How long has it been?
 set:phishing>
-The following prompts should be familiar; use the same values as before:
+```
 
+The following prompts should be familiar; use the same values as before:
+```
 set:phishing> Your gmail email address:herephishyphishyphish@gmail.com
 set:phishing> The FROM NAME user will see:Someone Special
 Email password:
 set:phishing> Flag this message/s as high priority? [yes|no]:no
 set:phishing> Does your server support TLS? [yes|no]:no
+```
+
 You should get an error at this point.
 
+```
 [!] Unable to deliver email. Printing exceptions message below, this is most likely due to an illegal attachment. If using GMAIL they inspect PDFs and is most likely getting caught.
 Press {return} to view error message.
 (552, '5.7.0 This message was blocked because its content presents a potential\n5.7.0 security issue. Please visit\n5.7.0  https://support.google.com/mail/?p=BlockedMessage to review our\n5.7.0 message content and attachment content guidelines. p16sm12601292pgc.4 - gsmtp')
 [*] SET has finished delivering the emails
-Alas, Gmail is wise to our script kiddie ways. As users, this is reassuring...Google is scanning the attachment for a known malicious signature and preventing us from sending the mail (even to ourselves). As hackers, this is frustrating, but illustrative of the challenges facing the would-be spear-phisher these days. For sending anything more than a link to a malicious site, it's not nearly as easy as it used to be, but that's partly because it's so effective when it does work.
+```
 
-So how would we get this payload through? Nominally, we'd have to find a mail relay that didn't have this attachment content scan implemented. Most major providers (hotmail, yahoo, etc.) have some measures like this in place, but not all, and not all of them are as sophisticated. But then even if we were able to send this mail through another relay, if our target is a gmail address, the same scan would likely be applied to the mail on the incoming side and it would just be bounced.
+Alas, Gmail is wise to our script kiddie ways. As users, this is
+reassuring...Google is scanning the attachment for a known malicious signature
+and preventing us from sending the mail (even to ourselves). As hackers, this
+is frustrating, but illustrative of the challenges facing the would-be
+spear-phisher these days. For sending anything more than a link to a malicious
+site, **it's not nearly as easy as it used to be, but that's partly because
+it's so effective when it does work.**
 
-To get this into a gmail inbox, the payload would probably need to be customized in some way to evade signature-based detection, and maybe even re-engineered to avoid well-known exploits like this one. It would also probably need to come from an address associated with the target to avoid being flagged as spam (after all, how often do you get RTF attachments from strangers?). We'll leave it as a very optional bonus for you to find a way to get this particular payload delivered using SET (Gmail is pretty solid, so a softer target would help), but for now, since many phishing attempts don't include any payload other than a malicious link, let's look at what might be on the other end of such a link.
+So how would we get this payload through? Nominally, we'd have to find a mail
+relay that didn't have this attachment content scan implemented. Most major
+providers (hotmail, yahoo, etc.) have some measures like this in place, but not
+all, and not all of them are as sophisticated. But then even if we were able to
+send this mail through another relay, if our target is a gmail address, the
+same scan would likely be applied to the mail on the incoming side and it would
+just be [bounced.](https://en.wikipedia.org/wiki/Bounce_message)
 
-If you've ever tried to manage your own (legitimate) mass mailing app, you're probably familiar with some of these issues, since in recent years, major providers like Gmail have started more aggressively fighting spam by restricting how emails from "untrusted" sources are handled. These days, even for sending legitimate mass mailings, many people have to use a third-party like MailChimp or SendGrid to avoid getting caught in filters.
-Milestone 3: Fakebook
+To get this into a gmail inbox, the payload would probably need to be
+customized in some way to evade signature-based detection, and maybe even
+re-engineered to avoid well-known exploits like this one. It would also
+probably need to come from an address associated with the target to avoid being
+flagged as spam (after all, how often do you get RTF attachments from
+strangers?). We'll leave it as a very optional bonus for you to find a way to
+get this particular payload delivered using SET (Gmail is pretty solid, so a
+softer target would help), but for now, since many phishing attempts don't
+include any payload other than a malicious link, let's look at what might be on
+the other end of such a link.
+
+> If you've ever tried to manage your own (legitimate) mass mailing app, you're
+> probably familiar with some of these issues, since in recent years, major
+> providers like Gmail have started more aggressively fighting spam by
+> restricting how emails from "untrusted" sources are handled. These days, even
+> for sending legitimate mass mailings, many people have to use a third-party
+> like MailChimp or SendGrid to avoid getting caught in filters.
+
+## Milestone 3: Fakebook
 Picture this: you're sitting with your favorite laptop in your favorite cafe, using their public Wi-Fi and browsing Facebook. The Wi-Fi connection drops suddenly, and you have no internet connection. You open your wireless network settings and don't see the cafe's network listed, so you're just about to get up and ask the overworked barista about it when you see the network SSID pop up again. You reconnect and head back to Facebook, but you've been logged out, so you log back in and continue browsing. None of this is particularly unusual. It's a busy morning in the cafe, and lots of people are using the cafe's single wireless AP, so a spotty connection makes sense given the load. It's also not too surprising that you were logged out of Facebook as the result of a connection drop, and anyway, your login worked and nothing seems amiss now.
 
 You probably didn't notice the quiet person sitting in the corner with a laptop who just ran an evil twin attack on the entire cafe. You'd have no way of knowing her backpack contained a USB wireless interface capable of packet injection, enabling her to kick everyone off the cafe's Wi-Fi and then spoof it using the same SSID so that everyone would reconnect to her rogue AP instead. And you probably didn't have more than a few seconds to notice that the URL of the Facebook login page to which you were redirected wasn't facebook.com but was an IP address (pointing to her laptop) or that it was missing the little green lock symbol your browser displays for secured URLs.
